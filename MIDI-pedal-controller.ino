@@ -38,10 +38,7 @@ void setup() {
         pot1val = analogRead(pot1);
         pot2val = analogRead(pot2);
 
-        // Configure the button as you'd like - not necessary if you're happy with the defaults
-        //sw_center.configureButton(configurePushButton);
-
-        // When the button is first pressed, call the function onButtonPressed (further down the page)
+        // Footswitch press and release callbacks
         sw_left.onPress(onButtonPressed);
         sw_center.onPress(onButtonPressed);
         sw_right.onPress(onButtonPressed);
@@ -50,7 +47,7 @@ void setup() {
         sw_center.onRelease(onButtonReleased);
         sw_right.onRelease(onButtonReleased);
         
-        // Once the button has been held for 1 second (1000ms) call onButtonHeld. Call it again every 0.5s (500ms) until it is let go
+        // If center footswitch is been held for 1.5 seconds, switch to PC mode
         sw_center.onHold(1500, setPCmode);
 }
 
@@ -128,7 +125,6 @@ void onButtonReleased(Button& btn, uint16_t duration){
           if(mode == "CC")
             MIDI.sendControlChange(cc_center, 0, CCchannel);
         }
-  //Serial.println(" released");
 }
 
 void setCCmode() {
