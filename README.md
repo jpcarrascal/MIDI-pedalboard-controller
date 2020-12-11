@@ -1,6 +1,6 @@
 # MIDI-pedalboard-controller
 
-https://raw.githubusercontent.com/jpcarrascal/MIDI-pedalboard-controller/main/MIDI-pedalboard-controller.png
+![Controller image](https://raw.githubusercontent.com/jpcarrascal/MIDI-pedalboard-controller/main/MIDI-pedalboard-controller.png)
 
 MIDI pedalboard controller, for Zoia and others. Features three footswitches and 2 potentiometers. It has two modes:
 - MIDI CC mode (default).
