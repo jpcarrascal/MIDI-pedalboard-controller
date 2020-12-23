@@ -11,7 +11,7 @@ The MIDI output port is a 1/8" TRS jack, conforming to the MIDI standard describ
 
 ### Dependencies
 - r89m Buttons: https://github.com/r89m/Button
-- rm89 PushButton: https://github.com/r89m/PushButton
+- r89m PushButton: https://github.com/r89m/PushButton
 - Bounce2: https://github.com/thomasfredericks/Bounce2
 - 47 effects Arduino MIDI library: https://github.com/FortySevenEffects/arduino_midi_library
 
