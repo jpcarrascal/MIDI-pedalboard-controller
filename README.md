@@ -20,5 +20,6 @@ The MIDI output port is a 1/8" TRS jack, conforming to the MIDI standard describ
 - Bounce2: https://github.com/thomasfredericks/Bounce2
 - 47 effects Arduino MIDI library: https://github.com/FortySevenEffects/arduino_midi_library
 
-### Potential improvements
+### Possible improvements
 - Add port for external expression pedal.
+- MIDI thru
