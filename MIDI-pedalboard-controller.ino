@@ -5,13 +5,13 @@
 #include <MIDI.h>
 #include "MIDIUSB.h"
 
-#define POT_COUNT 4
+#define POT_COUNT 4 // We have 4 potentiometers/knobs
 
 const bool debug = false;
 const bool usbMIDI = true; // Send MIDI via USB?
 const bool srlMIDI = true; // Send/receive MIDI via MIDI ports?
-const bool pickUpMode = true;
-const bool loopInternal = true;
+bool pickUpMode = true;
+bool loopInternal = false;
 PushButton sw_left = PushButton(2, ENABLE_INTERNAL_PULLUP);
 PushButton sw_center = PushButton(3, ENABLE_INTERNAL_PULLUP);
 PushButton sw_right = PushButton(4, ENABLE_INTERNAL_PULLUP);
@@ -112,10 +112,9 @@ void loop() {
   for(int i=0; i<4; i++) {
     potvalNew[i] = analogRead(pot[i]);
   }
-  
   for(int i=0; i<4; i++) {
     if( abs(potval[i] - potvalNew[i]) > 7 && mode == "CC") {
-      int outval = mapAndClamp(potval[i]);
+      int outval = mapAndClamp(potval[i], i);
       potval[i] = potvalNew[i];
       if(potPosCorrect[i]) {
         ccSend(cc_pot[i], outval, CCchannel);
@@ -169,9 +168,13 @@ void onButtonPressed(Button& btn){
 
 void onButtonReleased(Button& btn, uint16_t duration){
   if(btn.is(sw_left)) {
+    if(sw_right.isPressed())
+      loopInternal = !loopInternal; // Swap relay control source (sw_center vs MIDI)
     if(mode == "CC")
       ccSend(cc_left, 0, CCchannel);
   } else if (btn.is(sw_right)){
+    if(sw_left.isPressed())
+      loopInternal = !loopInternal; // Swap relay control source (sw_center vs MIDI)
     if(mode == "CC")
       ccSend(cc_right, 0, CCchannel);
   } else if (btn.is(sw_center)) {
@@ -233,7 +236,6 @@ void switchLoop(bool state) {
   digitalWrite(relayLED, state);
 }
 
-
 void debugThis(String name, int i, int value) {
   if(debug) {
     Serial.print(name);
@@ -241,16 +243,14 @@ void debugThis(String name, int i, int value) {
     Serial.print(i);
     Serial.print("]");
     Serial.print(": ");
-    Serial.print(value);
-    Serial.print("\tmapped: ");
-    Serial.println( mapAndClamp(value) );
+    Serial.println(value);
   }
 }
 
-int mapAndClamp(int input) {
-  int inMin = 5;
-  int inMax = 1014;
-  int outval = map(input, inMin, inMax, 0, 127);
+int mapAndClamp(int input, int i) {
+  int inMin[POT_COUNT] = {8,8,8,8};
+  int inMax[POT_COUNT] = {1014,1014,1014,1013};
+  int outval = map(input, inMin[i], inMax[i], 0, 127);
   if(outval < 0) outval = 0;
   if(outval>127) outval = 127;
   return (outval);
