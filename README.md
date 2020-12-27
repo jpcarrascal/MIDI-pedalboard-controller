@@ -1,10 +1,15 @@
-# MIDI-pedalboard-controller
+# MIDI-pedalboard-controller/switcher
 
 ![Controller image](https://raw.githubusercontent.com/jpcarrascal/MIDI-pedalboard-controller/main/MIDI-pedalboard-controller.png)
 
-Pedalboard controller, for Zoia and other MIDI-controlled devices. Features 3 footswitches and 4 knobs. It has two modes:
+Pedalboard controller, for Zoia and other MIDI-controlled devices. Features 3 footswitches and 4 knobs. Features:
+
+* Dual mode:
 - Control mode (default). In this mode, footswitches send MIDI CC mesages. Currently they are fixed to CC numbers 0, 1, 2.
 - Program mode, activated by pushing the center footswitch for 1.5 seconds. In this mode, the left and right footswitches send MIDI PC (Program Change) messages. Pushing the center footswitch again reverts back to CC mode.
+* "Pick-up" mode: if CC values corresponding to the 4 knobs (CC 3, 4, 5, 6) are received via the onboard MIDI input (channel 15), knobs will only send control data once their position match incoming MIDI messages. This avoids sudden parameter value jumps when controlling external devices.
+* External pedal loop
+* MIDI Class-compliant. Works as USB plug-and-play controller for computer software, no driver required.
 
 The MIDI output port is a 1/8" TRS jack, conforming to the MIDI standard described in [the MIDI.org website](https://www.midi.org/specifications/midi-transports-specifications/specification-for-use-of-trs-connectors-with-midi-devices-2) (sometimes referred as "TRS-A").
 
@@ -17,5 +22,3 @@ The MIDI output port is a 1/8" TRS jack, conforming to the MIDI standard describ
 
 ### Potential improvements
 - Add port for external expression pedal.
-- Switch to a microcontroller that can work as MIDI class-compliant device for computer control
-- Add MIDI input. This would be useful to get the controlled device's controller values, allowing a "takeover" mode to prevent sudden value jumps when moving knobs.
