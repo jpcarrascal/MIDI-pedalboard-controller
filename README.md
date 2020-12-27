@@ -22,4 +22,3 @@ The MIDI ports are 1/8" TRS jack, conforming to the MIDI standard described in [
 
 ### Possible improvements
 - Add port for external expression pedal.
-- MIDI thru
