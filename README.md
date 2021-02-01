@@ -11,6 +11,10 @@ Arduino Micro-based MIDI pedal controller. I made this device for controlling my
 * The external pedal loop can be controlled either via MIDI input (default) or internally with the middle footswitch. Switching between MIDI and internal is done by simultaneously pressing the left and right footswitches.
 * MIDI Class-compliant. Works as USB plug-and-play controller for computer software, no driver required.
 
+#### New features:
+
+* MIDI-USB passthrough: it passes PC and CC messages from USB-MIDI through to USB ports. Acts (almost) like a USB MIDI interface, so it is possible to control pedals from a computer with no additional hardware.
+
 (*) _The MIDI ports are 1/8" TRS jack, conforming to the MIDI standard described in [the MIDI.org website](https://www.midi.org/specifications/midi-transports-specifications/specification-for-use-of-trs-connectors-with-midi-devices-2) (sometimes referred as "TRS-A")._
 
 ### Dependencies

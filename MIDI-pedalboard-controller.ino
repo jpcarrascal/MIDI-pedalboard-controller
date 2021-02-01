@@ -7,11 +7,15 @@
 
 #define POT_COUNT 4 // We have 4 potentiometers/knobs
 
+// Configurationflags:
 const bool debug = false;
 const bool usbMIDI = true; // Send MIDI via USB?
 const bool srlMIDI = true; // Send/receive MIDI via MIDI ports?
 bool pickUpMode = true;
 bool loopInternal = false;
+bool center_toggle = true;
+int center_val = 0;
+
 PushButton sw_left = PushButton(2, ENABLE_INTERNAL_PULLUP);
 PushButton sw_center = PushButton(3, ENABLE_INTERNAL_PULLUP);
 PushButton sw_right = PushButton(4, ENABLE_INTERNAL_PULLUP);
@@ -96,6 +100,24 @@ void loop() {
       }
     }
   }
+  
+  midiEventPacket_t rx;
+  rx = MidiUSB.read();
+  if (rx.header != 0) {
+    if(rx.header == 0xB) {
+      MIDI.sendControlChange(rx.byte2, rx.byte3, CCchannel);
+    } else if(rx.header == 0xC) {
+      MIDI.sendProgramChange(rx.byte2, PCchannel);
+    }
+    // Would be great to make this work instead of the two calls above
+    // so not only CC and PC messages are passed through:
+    // MIDI.send( rx.header, rx.byte2, rx.byte3, (rx.byte1 >> 4) & 0x0F);
+    // Ref:
+    // - Arduino MIUSB input example
+    // - https://arduino.stackexchange.com/questions/41684/midiusb-why-is-the-command-put-twice
+    // - https://fortyseveneffects.github.io/arduino_midi_library/a00032.html#ga58454de7d3ee8ee824f955c805151ad2
+  }
+  
   sw_left.update();
   sw_right.update();
   sw_center.update();
@@ -157,8 +179,15 @@ void onButtonPressed(Button& btn){
   } else if (btn.is(sw_center)) {
     if(mode == "PC")
       setCCmode();
-    else
-      ccSend(cc_center, 127, CCchannel);
+    else {
+      if(center_toggle) {
+        if(center_val==0) center_val = 127;
+        else center_val = 0;        
+      } else {
+        center_val = 127;
+      }
+      ccSend(cc_center, center_val, CCchannel);      
+    }
     if(loopInternal) {
       loopState = !loopState;
       switchLoop(loopState);
@@ -178,7 +207,7 @@ void onButtonReleased(Button& btn, uint16_t duration){
     if(mode == "CC")
       ccSend(cc_right, 0, CCchannel);
   } else if (btn.is(sw_center)) {
-    if(mode == "CC")
+    if(mode == "CC" && !center_toggle)
       ccSend(cc_center, 0, CCchannel);
   }
 }
