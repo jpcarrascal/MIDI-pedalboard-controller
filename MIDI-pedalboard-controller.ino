@@ -14,7 +14,7 @@ const bool srlMIDI = true; // Send/receive MIDI via MIDI ports?
 bool pickUpMode = true;
 bool loopInternal = false;
 bool center_toggle = true;
-int center_val = 0;
+bool center_state = true;
 
 PushButton sw_left = PushButton(2, ENABLE_INTERNAL_PULLUP);
 PushButton sw_center = PushButton(3, ENABLE_INTERNAL_PULLUP);
@@ -36,6 +36,8 @@ String mode = "CC"; // "CC" = Control Change, PC" = Program Change
 const int cc_left   = 0;
 const int cc_right  = 1;
 const int cc_center = 2;
+const int cc_centerAlt = 8;
+
 const int cc_pot[POT_COUNT] = {3, 4, 5, 6};
 const int cc_relay = 7;
 const int pot[POT_COUNT] = {A0, A1, A2, A3};
@@ -181,12 +183,15 @@ void onButtonPressed(Button& btn){
       setCCmode();
     else {
       if(center_toggle) {
-        if(center_val==0) center_val = 127;
-        else center_val = 0;        
+        int cc;
+        if(center_state) cc = cc_center;
+        else cc = cc_centerAlt;
+        ccSend(cc, 127, CCchannel);
+        center_state = !center_state;
+        Serial.println(center_state);
       } else {
-        center_val = 127;
+        ccSend(cc_center, 127, CCchannel); 
       }
-      ccSend(cc_center, center_val, CCchannel);      
     }
     if(loopInternal) {
       loopState = !loopState;
